@@ -6,6 +6,7 @@ const feed = document.getElementById("feed");
 const emptyText = document.getElementById("empty-text");
 
 const posts = [];
+let like=0
 postForm.addEventListener("submit", (e) => {
   e.preventDefault();
   console.log(e.target);
@@ -37,10 +38,45 @@ console.log(posts)
   postForm.reset();
 
   // vamos a crear el posta para que se renderice
-createPost(posts)
+ const card = createPost(post)
+ // la card que ya se creo la debo pintar en algun lado, en este caso en feed
+ feed.prepend(card);
 });
 
 
-const createPost =(posts)=>{
-    console.log("ingrese al post", posts)
+const createPost =(post)=>{
+    console.log("ingrese al post", post)
+    const divPost = document.createElement('div');
+      divPost.className = 'card';
+      divPost.dataset.postId = post.id;
+     
+ 
+      divPost.innerHTML = `
+        <img src="${post.imageUrl}" class="card-img-top" alt="Imagen post">
+        <div class="card-body">
+          <h5 class="card-title mb-1">${post.title}</h5>
+          <p class="card-text">${post.description}</p>
+
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <button class="btn btn-sm like-btn" type="button" aria-pressed="${post.liked ? 'true' : 'false'}">
+                <i class="bi bi-heart${post.liked ? '-fill' : ''}" aria-hidden="true"></i>
+                <span class="ms-1 like-count">${post.likes}</span>
+              </button>
+            </div>
+            <small class="text-muted">Publicado ahora</small>
+          </div>
+        </div>
+      `;
+      // Ajustar clase si ya está like
+      const likeBtn = divPost.querySelector('.like-btn');
+      if (post.liked) likeBtn.classList.add('liked');
+
+      return divPost;
 }
+
+feed.addEventListener('click', (e) => {
+    console.log("ingrese", e.target.closest('.like-btn'))
+      
+    });
+
