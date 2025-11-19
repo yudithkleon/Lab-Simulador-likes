@@ -6,7 +6,7 @@ const feed = document.getElementById("feed");
 const emptyText = document.getElementById("empty-text");
 
 const posts = [];
-let like=0
+
 postForm.addEventListener("submit", (e) => {
   e.preventDefault();
   console.log(e.target);
@@ -30,53 +30,83 @@ postForm.addEventListener("submit", (e) => {
     description,
     imageUrl,
     likes: 0,
+    dislikes: 0,
+
     liked: false,
   };
 
   posts.unshift(post);
-console.log(posts)
+  console.log(posts);
   postForm.reset();
 
   // vamos a crear el posta para que se renderice
- const card = createPost(post)
- // la card que ya se creo la debo pintar en algun lado, en este caso en feed
- feed.prepend(card);
+  const card = createPost(post);
+  // la card que ya se creo la debo pintar en algun lado, en este caso en feed
+  feed.prepend(card);
 });
 
+const createPost = (post) => {
+  const divPost = document.createElement("div");
+  divPost.className = "card post-card";
+  divPost.dataset.postId = post.id;
 
-const createPost =(post)=>{
-    console.log("ingrese al post", post)
-    const divPost = document.createElement('div');
-      divPost.className = 'card';
-      divPost.dataset.postId = post.id;
-     
- 
-      divPost.innerHTML = `
-        <img src="${post.imageUrl}" class="card-img-top" alt="Imagen post">
-        <div class="card-body">
-          <h5 class="card-title mb-1">${post.title}</h5>
-          <p class="card-text">${post.description}</p>
+  divPost.innerHTML = `
+    <img src="${post.imageUrl}" class="card-img-top" alt="Imagen post">
 
-          <div class="d-flex justify-content-between align-items-center">
-            <div>
-              <button class="btn btn-sm like-btn" type="button" aria-pressed="${post.liked ? 'true' : 'false'}">
-                <i class="bi bi-heart${post.liked ? '-fill' : ''}" aria-hidden="true"></i>
-                <span class="ms-1 like-count">${post.likes}</span>
-              </button>
-            </div>
-            <small class="text-muted">Publicado ahora</small>
-          </div>
+    <div class="card-body">
+      <h5 class="card-title mb-1">${post.title}</h5>
+      <p class="card-text">${post.description}</p>
+
+      <div class="d-flex justify-content-between align-items-center">
+
+        <div class="d-flex gap-2">
+       
+          <button class="btn btn-outline-secondary round-btn btn-like" type="button">
+             <i class="bi bi-heart"></i>
+          </button>
+          <button class="btn btn-outline-secondary round-btn btn-dislike" type="button">
+            <i class="bi bi-hand-thumbs-down"></i>
+          </button>
+          <span class="ms-2 like-count">${post.likes}</span>
+
         </div>
-      `;
-      // Ajustar clase si ya está like
-      const likeBtn = divPost.querySelector('.like-btn');
-      if (post.liked) likeBtn.classList.add('liked');
 
-      return divPost;
-}
+     
+      </div>
+    </div>
+  `;
+  return divPost;
+};
 
-feed.addEventListener('click', (e) => {
-    console.log("ingrese", e.target.closest('.like-btn'))
-      
-    });
 
+feed.addEventListener("click", (e) => {
+  const likeBtn = e.target.closest(".btn-like");
+  const dislikeBtn = e.target.closest(".btn-dislike");
+
+  if (!likeBtn && !dislikeBtn) return;
+
+  const card = e.target.closest(".card");
+  const postId = card.dataset.postId;
+
+  const postIndex = posts.findIndex(p => p.id === postId);
+  if (postIndex === -1) return;
+
+  const post = posts[postIndex];
+
+  const heartIcon = card.querySelector(".btn-like i");
+  const countSpan = card.querySelector(".like-count");
+
+    if (likeBtn) {
+    post.likes += 1;
+    heartIcon.classList.add("liked");
+  }
+
+
+  if (dislikeBtn) {
+    post.likes = Math.max(0, post.likes - 1);
+    heartIcon.classList.remove("liked");
+  }
+
+  // Actualiza el numerito
+  countSpan.textContent = post.likes;
+});

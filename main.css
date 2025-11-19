@@ -1,9 +1,5 @@
 :root {
   --primary-1: #764ba2;
-  --primary-2: #cf9ed1;
-  --primary-3: #d8c9ec;
-  --primary-4: #FFE8A3;
-  --primary-5: #1E7424;
 
 
 }
@@ -16,4 +12,35 @@ header{
     text-align: center;
     margin: 1%;
     color: white;
+}
+
+
+.post-card {
+  width: 18rem;
+  align-items: center;
+  text-align: center;
+}
+
+
+#feed {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+
+.round-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.liked {
+  color: red !important;
+  font-weight: bold;
 }
