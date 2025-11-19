@@ -36,4 +36,11 @@ postForm.addEventListener("submit", (e) => {
 console.log(posts)
   postForm.reset();
 
+  // vamos a crear el posta para que se renderice
+createPost(posts)
 });
+
+
+const createPost =(posts)=>{
+    console.log("ingrese al post", posts)
+}
